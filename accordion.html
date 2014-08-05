@@ -72,19 +72,49 @@
       $('#accordion').on('hide.bs.collapse', function (e) {
         var $panel = $(e.target);
         var $header = $('#'+$panel.attr('aria-labelledby'));
-        $panel.attr('aria-hidden','true');
-        $header.attr('aria-selected', 'false');
-        $header.attr('aria-expanded','false');
-        $header.attr('tabindex','-1');
+        $panel.attr({'aria-hidden':'true'});
+        $header.attr({'aria-selected':'false','aria-expanded':'false','tabindex':'-1'});
       })
       $('#accordion').on('show.bs.collapse', function (e) {
         var $panel = $(e.target);
         var $header = $('#'+$panel.attr('aria-labelledby'));
-        $panel.attr('aria-hidden','false');
-        $header.attr('aria-selected', 'true');
-        $header.attr('aria-expanded','true');
-        $header.attr('tabindex','0');
+        $panel.attr({'aria-hidden':'false'});
+        $header.attr({'aria-selected':'true','aria-expanded':'true','tabindex':'0'});
       })
+
+      //$('#accordion').keydown = function (e) {
+      //  console.log(e.target);
+      //}
+
+      $(document).on('keydown.collapse','[data-toggle="collapse"]' ,  function(e) {
+        var $this = $(this),
+            $tablist = $this.closest('div[role=tablist] '),
+            $items = $tablist.find('[role=tab]'),
+            index = $items.index($items.filter(':focus')),
+            k = e.which || e.keyCode;
+
+        if (!/(9|32|37|38|39|40)/.test(k)) return;
+        if(k==32) $this.click();
+
+        if (k == 38 || k == 37) index--;  // up & left
+        if (k == 39 || k == 40) index++;  // down & right
+        if (k == 9) {
+          if(e.shiftKey) {
+             index--; //shift+tab
+          } else {
+             index++; //tab
+          }
+        }
+        if(index < 0) index = $items.length -1;
+        if(index == $items.length) index = 0;
+
+        $items.eq(index).focus();
+
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    
+
     </script>
   </body>
 </html>
