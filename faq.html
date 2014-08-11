@@ -58,6 +58,21 @@
         $panel.attr({'aria-hidden':'false'});
         $header.attr({'aria-expanded':'true'});
       })
+
+      $(document).on('keydown.collapse','[data-toggle="collapse"]', function(e) {
+        var $this = $(this),
+            k = e.which || e.keyCode;
+
+        if (!/(32|13)/.test(k)) return;
+        
+        if (e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) return;
+
+        if (k==32||k==13) $this.click();
+
+        e.preventDefault();
+        e.stopPropagation();
+
+      });
     </script>
     
   </body>
